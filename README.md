@@ -4,10 +4,10 @@ Souhrnný projekt do 7TILO.
 
 ## Autoři
 
-- Vojtěch Píža
 - Kateřina Šůstalová
+- Vojtěch Píža
 
-## TURING
+## Turing
 
 V balíčků `turing` je vše, co se týká turingových strojů, včetně pásky, přechodů apod.
 
