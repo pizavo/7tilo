@@ -11,6 +11,6 @@ Souhrnný projekt do 7TILO.
 
 V balíčku `src/main/kotlin/turing` je vše, co se týká turingových strojů, včetně pásky, přechodů apod.
 
-## hw*X*
+## Úkoly
 
 Jednotlivé úkoly, které obsahují implementaci daného problému s využitím TS, v balíčcích `src/main/kotlin/hw`*X*.
