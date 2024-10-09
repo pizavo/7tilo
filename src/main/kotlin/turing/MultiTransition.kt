@@ -1,7 +1,6 @@
 package turing
 
 class MultiTransition(
-	val tape: Tape,
 	val readSymbol: Char,
 	val writeSymbol: Char,
 	val direction: MovementDirection,
