@@ -3,7 +3,9 @@ package hw3
 import hw3.extensions.sortAndPrintComplexity
 
 fun main() {
-    "P24026".toList().sortAndPrintComplexity("Studentské číslo")
+    "P24026".toList().sortAndPrintComplexity("Studentské číslo: P24026")
+    println()
+    "P24028".toList().sortAndPrintComplexity("Studentské číslo: P24028")
     
     println()
     
