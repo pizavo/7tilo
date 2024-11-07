@@ -8,7 +8,7 @@ import turing.Transition
 
 fun main() {
     val tape = Tape("100+10")
-    
+
     val states = mutableListOf<State>(
         State(1),
         State(2),
@@ -20,47 +20,44 @@ fun main() {
         State(8),
         State(9),
     )
-    
+
     val transitions = listOf<Transition>(
-        states[0].transition('*', '*', MovementDirection.RIGHT, states[0]),
-        /*q0.transition('0', '0', MovementDirection.RIGHT, q0),
-        q0.transition('1', '1', MovementDirection.RIGHT, q0),
-        q0.transition('+', '+', MovementDirection.RIGHT, q0),*/
+        states[0].transition('0', '0', MovementDirection.RIGHT, states[0]),
+        states[0].transition('1', '1', MovementDirection.RIGHT, states[0]),
+        states[0].transition('+', '+', MovementDirection.RIGHT, states[0]),
         states[0].transition('#', '#', MovementDirection.LEFT, states[1]),
-        
+
         states[1].transition('0', '1', MovementDirection.LEFT, states[2]),
         states[1].transition('1', '0', MovementDirection.STAY, states[4]),
-        
+
         states[2].transition('0', '1', MovementDirection.LEFT, states[2]),
         states[2].transition('1', '0', MovementDirection.STAY, states[3]),
         states[2].transition('+', '#', MovementDirection.RIGHT, states[7]),
-        
+
         states[3].transition('0', '0', MovementDirection.LEFT, states[3]),
         states[3].transition('1', '1', MovementDirection.LEFT, states[3]),
         states[3].transition('+', '+', MovementDirection.LEFT, states[5]),
-        
+
         states[4].transition('0', '0', MovementDirection.LEFT, states[4]),
         states[4].transition('1', '1', MovementDirection.LEFT, states[4]),
         states[4].transition('+', '+', MovementDirection.LEFT, states[5]),
-        
+
         states[5].transition('0', '1', MovementDirection.STAY, states[6]),
         states[5].transition('1', '0', MovementDirection.LEFT, states[5]),
         states[5].transition('#', '1', MovementDirection.STAY, states[6]),
-        
-        states[6].transition('*', '*', MovementDirection.STAY, states[0]),
-        /*q6.transition('0', '0', MovementDirection.STAY, q0),
-        q6.transition('1', '1', MovementDirection.STAY, q0),
-        q6.transition('+', '+', MovementDirection.STAY, q0),*/
+
+        states[6].transition('0', '0', MovementDirection.STAY, states[6]),
+        states[6].transition('1', '1', MovementDirection.STAY, states[6]),
+        states[6].transition('+', '+', MovementDirection.STAY, states[6]),
         states[6].transition('#', '#', MovementDirection.STAY, states[0]),
-        
-        states[7].transition('*', '#', MovementDirection.RIGHT, states[7]),
-        /*q7.transition('0', '#', MovementDirection.RIGHT, q7),
-        q7.transition('1', '#', MovementDirection.RIGHT, q7),
-        q7.transition('+', '#', MovementDirection.RIGHT, q7),*/
+
+        states[7].transition('0', '#', MovementDirection.RIGHT, states[7]),
+        states[7].transition('1', '#', MovementDirection.RIGHT, states[7]),
+        states[7].transition('+', '#', MovementDirection.RIGHT, states[7]),
         states[7].transition('#', '#', MovementDirection.STAY, states[8]),
     )
-    
-    Machine(tape, listOf('0', '1', '+'), transitions, states[0], listOf(states[8]), listOf('*')).run {
+
+    Machine(tape, listOf('0', '1', '+', '#'), transitions, states[0], listOf(states[8])).run {
         run()
         print()
     }

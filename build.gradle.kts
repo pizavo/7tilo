@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+    runtimeOnly("io.github.oshai:kotlin-logging:7.0.0")
     testImplementation(kotlin("test"))
 }
 
