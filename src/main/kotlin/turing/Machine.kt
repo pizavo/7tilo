@@ -2,16 +2,22 @@ package turing
 
 class Machine(
     val tape: Tape,
+    val symbols: List<Char>,
     val transitions: List<Transition>,
-    var state: State,
+    val startState: State,
     val endStates: List<State>,
     val wildcard: List<Char> = listOf()
 ) {
+    private var state: State
     var timeComplexity = 0
         private set
     val places = mutableSetOf<Int>()
     val spaceComplexity: Int
         get() = places.size
+    
+    init {
+        state = startState
+    }
     
     fun run() {
         places.addAll(tape.initialUsedSpaces)
@@ -59,5 +65,46 @@ class Machine(
         println("Result: $tape")
         println("Time complexity: $timeComplexity")
         println("Space complexity: $spaceComplexity")
+    }
+    
+    fun printConfig() {
+        println("Start state: $startState")
+        println("End states: $endStates")
+        println("Transitions:")
+        transitions.forEach {
+            println("  $it")
+        }
+    }
+    
+    fun encode(): String =
+        "0".repeat(startState.id) + "11" + endStates.joinToString("1") { "0".repeat(it.id) } +
+        "111" + transitions.joinToString("11") { it.encode(symbols) } + "111"
+    
+    companion object {
+        fun decode(tape: Tape, encoded: String, symbols: List<Char>): Machine {
+            val startState: State
+            val states = mutableListOf<State>()
+            val endStates = mutableListOf<State>()
+            val transitions: List<Transition>
+            
+            encoded.split("111").let {
+                startState = decodeMetadata(it[0], states, endStates)
+                transitions = it[1].split("11").map { Transition.decode(it, symbols, states) }
+            }
+            
+            return Machine(tape, symbols, transitions, startState, endStates)
+        }
+        
+        private fun decodeMetadata(encoded: String, states:MutableList<State>, endStates: MutableList<State>): State =
+            encoded.split("11").let {
+                it[1].split("1").forEach { encodedEndState ->
+                    val id = encodedEndState.count { it == '0' }
+                    endStates += states.find { state -> state.id == id } ?: State(id).also { state -> states.add(state) }
+                }
+                
+                it[0].count { it == '0' }.let { startStateId ->
+                    return states.find { it.id == startStateId } ?: State(startStateId).also { states.add(it) }
+                }
+            }
     }
 }
