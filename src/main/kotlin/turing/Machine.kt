@@ -1,9 +1,5 @@
 package turing
 
-import io.github.oshai.kotlinlogging.KotlinLogging
-
-private val logger = KotlinLogging.logger {}
-
 class Machine(
     val tape: Tape,
     val symbols: List<Char>,
@@ -29,8 +25,6 @@ class Machine(
 
         while (state !in endStates) {
             findTransition().let {
-                logger.debug { tape.debug(); "Transition: $it" }
-
                 handleComplexity(it)
                 executeTransition(it)
 
@@ -85,32 +79,46 @@ class Machine(
 
     fun encode(): String =
         "0".repeat(startState.id) + "11" + endStates.joinToString("1") { "0".repeat(it.id) } +
+                "11" + symbols.joinToString("1") { "0".repeat(it.code) } +
                 "111" + transitions.joinToString("11") { it.encode(symbols) } + "111"
 
     companion object {
-        fun decode(tape: Tape, encoded: String, symbols: List<Char>): Machine {
+        fun decode(tape: Tape, encoded: String): Machine {
             val startState: State
             val states = mutableListOf<State>()
             val endStates = mutableListOf<State>()
+            val symbols = mutableListOf<Char>()
             val transitions: List<Transition>
 
             encoded.split("111").let { parts ->
-                startState = decodeMetadata(parts[0], states, endStates)
+                startState = decodeMetadata(parts[0], states, endStates, symbols)
                 transitions = parts[1].split("11").map { Transition.decode(it, symbols, states) }
             }
 
             return Machine(tape, symbols, transitions, startState, endStates)
         }
 
-        private fun decodeMetadata(encoded: String, states: MutableList<State>, endStates: MutableList<State>): State =
-            encoded.split("11").let { metadata ->
-                metadata[1].split("1").forEach { encodedEndState ->
-                    val id = encodedEndState.count { it == '0' }
-                    endStates += states.find { state -> state.id == id }
-                        ?: State(id).also { state -> states.add(state) }
+        private fun decodeMetadata(
+            encoded: String,
+            states: MutableList<State>,
+            endStates: MutableList<State>,
+            symbols: MutableList<Char>,
+        ): State =
+            encoded.split("11").let { metadataParts ->
+                metadataParts[1].split("1").forEach { encodedEndState ->
+                    encodedEndState.count { it == '0' }.let { id ->
+                        endStates += states.find { state -> state.id == id }
+                            ?: State(id).also { state -> states.add(state) }
+                    }
                 }
 
-                metadata[0].count { it == '0' }.let { startStateId: Int ->
+                metadataParts[2].split("1").forEach { encodedSymbol ->
+                    encodedSymbol.count { it == '0' }.let { code ->
+                        code.toChar().takeIf { !symbols.contains(it) }?.let { symbols.add(it) }
+                    }
+                }
+
+                metadataParts[0].count { it == '0' }.let { startStateId: Int ->
                     states.find { it.id == startStateId } ?: State(startStateId).also { states.add(it) }
                 }
             }

@@ -75,4 +75,7 @@ class Tape(tape: String = "") {
         println(tape)
         println(" ".repeat(headTmp) + "^")
     }
+
+    fun copy(): Tape =
+        Tape(symbols.joinToString("").trim('#'))
 }
