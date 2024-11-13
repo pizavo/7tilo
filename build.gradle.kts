@@ -10,6 +10,8 @@ repositories {
 }
 
 dependencies {
+    implementation("io.github.oshai:kotlin-logging:7.0.0")
+    implementation("ch.qos.logback:logback-classic:1.5.12")
     testImplementation(kotlin("test"))
 }
 
