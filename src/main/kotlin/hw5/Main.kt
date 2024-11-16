@@ -1,27 +1,29 @@
 package hw5
 
 fun main() {
-	val startNode = Node(5).apply {
-		lanes += 145 to Node(40).apply {
-			lanes += 4 to Node(1)
-			lanes += 30 to Node(3)
-			lanes += 78 to Node(4).apply {
-				lanes += 30 to Node(20)
-				lanes += 57 to Node(19)
-			}
-		}
-		lanes += 132 to Node(14).apply {
-			lanes += 48 to Node(10)
-			lanes += 21 to Node(15)
-		}
-		lanes += 193 to Node(1).apply {
-			lanes += 12 to Node(5)
-			lanes += 150 to Node(12).apply {
-				lanes += 23 to Node(43)
-				lanes += 27 to Node(36)
-			}
-		}
-	}
-	
-	Traverse(485, startNode)
+    val debug = false
+
+    val startNode = Node(5).apply {
+        (this to Node(40) priced 145).apply {
+            this to Node(1) priced 4
+            this to Node(3) priced 30
+            (this to Node(4) priced 78).apply {
+                this to Node(20) priced 30
+                this to Node(19) priced 57
+            }
+        }
+        (this to Node(14) priced 132).apply {
+            this to Node(10) priced 48
+            this to Node(15) priced 21
+        }
+        (this to Node(1) priced 193).apply {
+            this to Node(5) priced 12
+            (this to Node(12) priced 150).apply {
+                this to Node(43) priced 23
+                this to Node(36) priced 27
+            }
+        }
+    }
+
+    Traversal(485, startNode, debug).run()
 }
