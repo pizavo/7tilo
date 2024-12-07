@@ -6,32 +6,32 @@ class Instructions(private val instructions: List<Triple<Instruction, ValueType,
 	operator fun get(index: Int) =
 		if (index < 1) throw IndexOutOfBoundsException("Instruction index must be greater than 0")
 		else instructions[index - 1]
-	
+
 	enum class Instruction {
-		READ, WRITE, LOAD, STORE, ADD, SUB, MUL, DIV, JMP, JZ, JGTZ, JH, HALT
+		READ, WRITE, LOAD, STORE, ADD, SUB, JMP, JZ, JGTZ, JH, HALT
 	}
-	
+
 	enum class ValueType {
 		CONSTANT, DIRECT, INDIRECT, EMPTY
 	}
-	
+
 	val size: Int
 		get() = instructions.size
-	
+
 	companion object {
 		fun fromFile(file: File): Instructions {
 			val lines = file.readLines()
 			val instructions = mutableListOf<Triple<Instruction, ValueType, Int?>>()
-			
+
 			for (line in lines) {
 				val instructionString: String
 				val valueString: String?
-				
+
 				line.split(" ").let {
 					instructionString = it[0]
 					valueString = it.getOrNull(1)
 				}
-				
+
 				val instruction = parseInstruction(instructionString)
 				val type = valueString?.first()?.let {
 					if (it == '*') ValueType.INDIRECT
@@ -45,13 +45,13 @@ class Instructions(private val instructions: List<Triple<Instruction, ValueType,
 					if (it.isBlank() || it == "#") null
 					else it.toInt()
 				}
-				
+
 				instructions.add(Triple(instruction, type, value))
 			}
-			
+
 			return Instructions(instructions)
 		}
-		
+
 		private fun parseInstruction(instruction: String): Instruction =
 			when (instruction) {
 				"READ" -> Instruction.READ
@@ -60,8 +60,6 @@ class Instructions(private val instructions: List<Triple<Instruction, ValueType,
 				"STORE" -> Instruction.STORE
 				"ADD" -> Instruction.ADD
 				"SUB" -> Instruction.SUB
-				"MUL" -> Instruction.MUL
-				"DIV" -> Instruction.DIV
 				"JMP" -> Instruction.JMP
 				"JZ" -> Instruction.JZ
 				"JGTZ" -> Instruction.JGTZ
