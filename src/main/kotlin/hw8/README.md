@@ -31,6 +31,7 @@ Podporované operace jsou:
 | *HALT*    |    |   |    |
 
 Sady programových instrukcí se zapisují do `.txt` a za čísla řádků se považují samotné řádky v rámci souboru.
+Nachází se v `src/main/resources/ram`.
 
 ## Výsledky
 
